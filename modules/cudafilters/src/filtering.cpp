@@ -402,8 +402,8 @@ namespace
         columnKernel.convertTo(kernel32F, CV_32F);
         columnKernel_.upload(kernel32F.reshape(1, 1));
 
-        CV_Assert( rowKernel_.cols > 0 && rowKernel_.cols <= 32 );
-        CV_Assert( columnKernel_.cols > 0 && columnKernel_.cols <= 32 );
+        CV_Assert( rowKernel_.cols > 0 && rowKernel_.cols <= 128 );
+        CV_Assert( columnKernel_.cols > 0 && columnKernel_.cols <= 128 );
 
         normalizeAnchor(anchor_.x, rowKernel_.cols);
         normalizeAnchor(anchor_.y, columnKernel_.cols);
