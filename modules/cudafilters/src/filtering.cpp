@@ -341,6 +341,9 @@ namespace
                               Point anchor, int rowBorderMode, int columnBorderMode);
 
         void apply(InputArray src, OutputArray dst, Stream& stream = Stream::Null());
+        
+        void applyRow(InputArray src, OutputArray dst, Stream& stream = Stream::Null());
+        void applyColumn(InputArray src, OutputArray dst, Stream& stream = Stream::Null());
 
     private:
         typedef void (*func_t)(PtrStepSzb src, PtrStepSzb dst, const float* kernel, int ksize, int anchor, int brd_type, int cc, cudaStream_t stream);
@@ -434,6 +437,42 @@ namespace
 
         rowFilter_(src, buf_, rowKernel_.ptr<float>(), rowKernel_.cols, anchor_.x, rowBorderMode_, cc, stream);
         columnFilter_(buf_, dst, columnKernel_.ptr<float>(), columnKernel_.cols, anchor_.y, columnBorderMode_, cc, stream);
+    }
+    
+    void SeparableLinearFilter::applyRow(InputArray _src, OutputArray _dst, Stream& _stream)
+    {
+        GpuMat src = _src.getGpuMat();
+        CV_Assert( src.type() == srcType_ );
+
+        _dst.create(src.size(), dstType_);
+        GpuMat dst = _dst.getGpuMat();
+
+        ensureSizeIsEnough(src.size(), bufType_, buf_);
+
+        DeviceInfo devInfo;
+        const int cc = devInfo.majorVersion() * 10 + devInfo.minorVersion();
+
+        cudaStream_t stream = StreamAccessor::getStream(_stream);
+
+        rowFilter_(src, dst, rowKernel_.ptr<float>(), rowKernel_.cols, anchor_.x, rowBorderMode_, cc, stream);
+    }
+    
+    void SeparableLinearFilter::applyColumn(InputArray _src, OutputArray _dst, Stream& _stream)
+    {
+        GpuMat src = _src.getGpuMat();
+        CV_Assert( src.type() == srcType_ );
+
+        _dst.create(src.size(), dstType_);
+        GpuMat dst = _dst.getGpuMat();
+
+        ensureSizeIsEnough(src.size(), bufType_, buf_);
+
+        DeviceInfo devInfo;
+        const int cc = devInfo.majorVersion() * 10 + devInfo.minorVersion();
+
+        cudaStream_t stream = StreamAccessor::getStream(_stream);
+
+        columnFilter_(src, dst, columnKernel_.ptr<float>(), columnKernel_.cols, anchor_.y, columnBorderMode_, cc, stream);
     }
 }
 

@@ -82,6 +82,9 @@ public:
     @param stream Stream for the asynchronous version.
      */
     virtual void apply(InputArray src, OutputArray dst, Stream& stream = Stream::Null()) = 0;
+    
+    virtual void applyRow(InputArray src, OutputArray dst, Stream& stream = Stream::Null()) { }
+    virtual void applyColumn(InputArray src, OutputArray dst, Stream& stream = Stream::Null()) {}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
