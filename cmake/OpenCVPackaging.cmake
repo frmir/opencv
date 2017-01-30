@@ -18,6 +18,8 @@ OpenCV makes it easy for businesses to utilize and modify the code.")
   set(CPACK_PACKAGE_VERSION "${OPENCV_VCSVERSION}")
 endif(NOT OPENCV_CUSTOM_PACKAGE_INFO)
 
+set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+
 #arch
 if(X86)
   set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
